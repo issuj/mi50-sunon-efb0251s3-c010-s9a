@@ -3,31 +3,32 @@ $fa=1;
 $fn=0;
 
 module lip(th = 2) {
-  //th = 2;
   linear_extrude(5.01) polygon([
     [-th, th], [97+th, th], [97+th, -34], [97, -34], [97, 0], [0, 0], [0, -34], [-th, -34]
    ]);
 }
 
-module mask(th = 2) {
-  //th = 2;
+module base(th = 2) {
   shape = [
     [-th, th], [97+th, th], [97+th, -34], [95-6.5, -34],
-    [95-6.5, -16], [1+43+4, -16], [1+43+4, -34], [-th, -34]
+    [95-6.5, -23], [95-6.5-3, -20], [1+43+4+3, -20], [1+43+4, -23],
+    [1+43+4, -34], [-th, -34]
   ];
   hole = [
     [1, -1], [96, -1], [96, -12], [1+43+3, -12],
     [1+43, -12-3], [1+43, -24], [1, -24]];
 
   difference() {
-    linear_extrude(2.01) polygon(concat(shape, hole), [[0, 1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]]);
+    linear_extrude(2.01) polygon(concat(shape, hole), [
+      [for (i = [0:9]) i], [for (i = [10:16]) i]
+    ]);
   
     translate([8, -34+4.5, -0.5]) cylinder(h = 3, r = 1.8);
     translate([8+16, -34+4.5, -0.5]) cylinder(h = 3, r = 1.8);
     translate([8+16+16, -34+4.5, -0.5]) cylinder(h = 3, r = 1.8);
     translate([95-3, -34+7, -0.5]) cylinder(h = 3, r = 1.8);
-    translate([1+43+3.5, -24, 2.01]) cube([1, 0.2, 0.1], center=true);
-    translate([1+43+3.5, -20, 2.01]) cube([1, 0.2, 0.1], center=true);
+    //translate([1+43+3.5, -24, 2.01]) cube([1, 0.2, 0.1], center=true);
+    //translate([1+43+3.5, -20, 2.01]) cube([1, 0.2, 0.1], center=true);
   }
 }
 
@@ -48,26 +49,6 @@ module extrude_between(points0, points1, height, convexity=2) {
         convexity=convexity
     );
 }
-
-
-/*module duct1(lipth, dth = 2) {
-  shape = [
-    [-lipth, lipth], [97+lipth, lipth], [97+lipth, -12-dth], [1+43+3+sqrt(dth)/2, -12-dth],
-    [1+43+dth, -12-3-sqrt(dth)/2], [1+43+dth, -26+(dth-1)], [-lipth, -26+(dth-1)],
-  ];
-
-  hole = [
-    [shape[0][0]+dth, shape[0][1]-dth],
-    [shape[1][0]-dth, shape[1][1]-dth],
-    [shape[2][0]-dth, shape[2][1]+dth],
-    [shape[3][0]-sqrt(dth)/2, shape[3][1]+dth],
-    [shape[4][0]-dth, shape[4][1]+sqrt(dth)/2],
-    [shape[5][0]-dth, shape[5][1]+dth],
-    [shape[6][0]+dth, shape[6][1]+dth],
-  ];
-
-    linear_extrude(10.01) polygon(concat(shape, hole), [[0, 1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13]]);  
-}*/
 
 module duct1(lipth, dth = 2) {
   shape0 = [
@@ -94,8 +75,6 @@ module duct1(lipth, dth = 2) {
     [shape0[6][0]-skewLeft, shape0[6][1]],
   ];
 
-  //extrude_between(shape0, shape1, 8.01);
-  
   hole0 = [
     [shape0[0][0]+dth, shape0[0][1]-dth],
     [shape0[1][0]-dth, shape0[1][1]-dth],
@@ -179,34 +158,48 @@ module duct2(lipth, dth = 2) {
 module fanmount (dth = 2) {
   shape0 = [
     [-dth, dth],
-    [107, dth],
-    [107, 0],
+    [107-dth, dth],
+    [107-dth, 0],
     [0, 0],
     [0, -30],
-    [107, -30],
-    [107, -30-dth],
+    [107-dth, -30],
+    [107-dth, -30-dth],
     [-dth, -30-dth]];
-  translate([dth, -dth, 0]) linear_extrude(0.51) polygon(shape0);
+  translate([dth, -dth, 0]) linear_extrude(1.51) polygon(shape0);
 
-  narrow = 2.5;
+  narrow = 2.6;
 
   shape1 = [
     [-dth, dth-narrow],
-    [107, dth-narrow],
-    [107, -narrow],
+    [107-5, dth-narrow],
+    [107-5, -narrow],
     [0, -narrow],
     [0, -30+narrow],
-    [107, -30+narrow],
-    [107, -30-dth+narrow],
+    [107-5, -30+narrow],
+    [107-5, -30-dth+narrow],
     [-dth, -30-dth+narrow]
   ];
+
+  translate([dth, -dth, 1.5]) extrude_between(reverse(shape0), reverse(shape1), 3.5);
+
+  nudge = 1;
+
+  shape2 = [
+    [-dth+nudge, dth-nudge],
+    [107-nudge, dth-nudge],
+    [107-nudge, 0-nudge],
+    [0+nudge, 0-nudge],
+    [0+nudge, -30+nudge],
+    [107-nudge, -30+nudge],
+    [107-nudge, -30-dth+nudge],
+    [-dth+nudge, -30-dth+nudge]];
+  translate([dth, -dth, -1.5]) linear_extrude(1.5) polygon(shape2);
   
-  translate([dth, -dth, 0.5]) extrude_between(reverse(shape0), reverse(shape1), 5);
   
 }
 
 translate([0, 0, -5]) lip(1.4);
-mask(1.4);
+base(1.4);
 translate([0, 0, 2]) duct1(1.4, 1.6);
 translate([0, 0, 10]) duct2(1.4, 1.6);
 translate([-3.4, 9, 30]) fanmount(1.6);
