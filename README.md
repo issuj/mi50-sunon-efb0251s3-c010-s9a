@@ -5,19 +5,21 @@ AMD MI50 fan adapter for Sunon EFB0251S3-C010-S9A
 This is my first printable design, I have no idea what to put here. Print as many as you like. If you manage to make some profit doing that, good for you.
 
 ## Version 2
-Tried to fix the issues in version 1. Still waiting for the prints.
+Fixes the issues with version 1. The fan now can be inserted without breaking anything, and doesn't come off without pulling.
+![Plugs](photos/v2_plugs1.jpg)
+![Plugs](photos/v2_plugs2.jpg)
 
 ## Version 1
 
 * Fits the GPU fine. There's a bit too much space for the power plugs which causes a bit of backflow.
 * The fan end is a bit too tight. Broke one of the adapters a bit pushing the fan in.
 
-![Length](photos/top.jpg)
-![Length](photos/side.jpg)
-![Length](photos/stack.jpg)
+![Top view](photos/top.jpg)
+![Side view](photos/side.jpg)
+![Stacking](photos/stack.jpg)
 ![Length](photos/length.jpg)
 
 ## AMD MI50
 This might be of use if you want to make your own design. Grid: 0.5mm
 
-![Length](photos/mi50.jpg)
+![Measures](photos/mi50.jpg)
